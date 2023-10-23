@@ -1,0 +1,41 @@
+[job]
+
+[job.LCMDataGen]
+format = "parquet"
+generator = "QCost"
+dir = "test-data/qcost-t30"
+file_prefix = "cost"
+num_workers = -1 # -1 forces all cores to be used
+num_files_train = 10
+num_files_test = 4
+samples = 1048576  # per file sample
+overwrite_if_exists = true
+train_data_dir = "train_data"
+test_data_dir = "test_data"
+
+[lsm]
+max_levels = 20
+
+[lsm.bits_per_elem]
+max = 9.9
+min = 0
+
+[lsm.size_ratio]
+max = 31
+min = 2
+
+[generator]
+entry_sizes = [1024, 2048, 4096, 8192]      # bits
+page_sizes = [4, 8, 16]                     # KB pages
+selectivity_range = [1e-7, 1e-9]            # low, high
+
+memory_budget = [5, 20]                     # low, high, bits per element
+
+[lsm.system]
+B = 4                                       # Number of physical entries per page
+phi = 1                                     #1 implies writes and reads throughput is roughly the same the current storage device
+s = 2e-7                                    #Range query selectivity. 0 implies the key range per range Exponential query would roughly fit into 1 page. Selectivity 1 implies range queries will always query the full key possible range
+E = 8192                                    # Size of a single entry in bits
+N = 1000000000                              # Total number of elements our LSM tree will start off with
+H = 10                                      # Memory budget in terms of bits per element, this combined with number of elements (N) will get you roughly the expected total memory we are allocating between bloom filter memory and buffer memory
+M = -1                                      # Can use ttotal memory instead of bits per element to budget, set M to -1 to use H as it will take priority
