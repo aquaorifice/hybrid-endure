@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
-from cost_model import CostPredictor  # Import the model class
+from cost_model import CostPredictor  
 
 
 class CostModelTrainer:
@@ -20,7 +20,6 @@ class CostModelTrainer:
     def train(self):
         for epoch in range(self.num_epochs):
 
-            # training
             train_loss = 0.0
             for x_train, y_train in self.train_loader:
                 self.optimizer.zero_grad()
@@ -32,7 +31,7 @@ class CostModelTrainer:
 
                 train_loss += loss.item()
 
-            # validating
+            # trying to validate - same as train
             val_loss = 0.0
             for x_val, y_val in self.val_loader:
                 y_pred = self.model(x_val)
@@ -45,7 +44,7 @@ class CostModelTrainer:
             print(f"Val loss: {val_loss/len(self.val_loader):.4f}")
 
     def evaluate(self, data_loader):
-        # Evaluation loop
+        #evaluate here in the loop for the test sample
         test_loss = 0.0
         for x_test, y_test in data_loader:
             y_pred = self.model(x_test)
